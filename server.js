@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/db.js';
 import testRoutes from './routes/testRoutes.js'
+import authRoutes from './routes/authRoutes.js'
 
 dotenv.config();
 const app = express();
@@ -13,7 +14,8 @@ app.use(cors()); //enables cross origin resource sharing otherwise frontend requ
 app.use(express.json()); //automatically parses the json and makes it available on req.body
 
 // Routes
-app.use('/api',testRoutes);
+app.use('/api/test',testRoutes);
+app.use('/api/auth', authRoutes)
 
 // DB + Server
 connectDB();
