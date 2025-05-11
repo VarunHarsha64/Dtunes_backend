@@ -97,3 +97,13 @@ export const logout = (req, res) => {
         message: "Logged out sucessfully!"
     })
 }
+
+
+export const googleCallback = (req, res) => {
+  const user = req.user;
+
+  const token = generateToken(user._id);
+
+  // Redirect to frontend with token or return JSON
+  return res.redirect(`http://localhost:3000/oauth-success?token=${token}`);
+};
