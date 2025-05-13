@@ -126,8 +126,6 @@ export const changePassword = async (req, res) => {
         user.password = hashedPassword;
         await user.save();
 
-        if (!updatedUser) return res.status(400).json({ success: false, message: "Failed to change password!" });
-
         res.status(200).json({ success: true, message: "Password changed sucessfully!" });
     }
     catch (err) {
@@ -141,7 +139,7 @@ export const changePassword = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
     try {
-        const { email, password } = req.body();
+        const { email, password } = req.body;
         if (!email || !password) return res.status(400).json({
             success: false,
             message: "Email, Password are mandatory to login!"
@@ -186,9 +184,8 @@ export const deleteUser = async (req, res) => {
 
 export const googleCallback = (req, res) => {
     const user = req.user;
-
     const token = generateToken(user._id);
 
     // Redirect to frontend with token or return JSON
-    return res.redirect(`http://localhost:3000/oauth-success?token=${token}`);
+    return res.redirect(`http://localhost:5173/oauth-success?token=${token}&name=${encodeURIComponent(user.name)}&email=${encodeURIComponent(user.email)}`);
 };
