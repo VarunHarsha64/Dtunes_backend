@@ -93,17 +93,102 @@ export const login = async (req, res) => {
 export const logout = (req, res) => {
     //on frontend simply delete the token from storage
     res.status(200).json({
-        success: true, 
+        success: true,
         message: "Logged out sucessfully!"
     })
 }
 
+export const changePassword = async (req, res) => {
+    try {
+        const { email, oldpassword, newpassword } = req.body;
+
+        if (!newpassword || !email || !oldpassword) {
+            return res.status(400).json({
+                success: false,
+                message: "Email and Old Password and New Password are mandatory!",
+            })
+        }
+
+        const user = await User.findOne({ email });
+        if (!user) return res.status(400).json({
+            success: false,
+            message: "Invalid Credentials!"
+        })
+
+        const isMatch = await bcrypt.compare(oldpassword, user.password);
+        if (!isMatch) return res.status(400).json({
+            success: false,
+            message: "Invalid Credentails!"
+        });
+
+        const hashedPassword = await bcrypt.hash(newpassword, 10);
+
+        user.password = hashedPassword;
+        await user.save();
+
+        if (!updatedUser) return res.status(400).json({ success: false, message: "Failed to change password!" });
+
+        res.status(200).json({ success: true, message: "Password changed sucessfully!" });
+    }
+    catch (err) {
+        console.error("Change Password Error: ", err.message);
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+export const deleteUser = async (req, res) => {
+    try {
+        const { email, password } = req.body();
+        if (!email || !password) return res.status(400).json({
+            success: false,
+            message: "Email, Password are mandatory to login!"
+        })
+
+        const user = await User.findOne({ email });
+        if (!user) return res.status(400).json({
+            success: false,
+            message: "Invalid Credentials!"
+        })
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) return res.status(400).json({
+            success: false,
+            message: "Invalid Credentails!"
+        });
+
+        const deletedUser = await User.findByIdAndDelete(user._id);
+
+        if (!deletedUser) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found.",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "User deleted successfully.",
+        });
+
+
+    } catch (error) {
+        console.error("Delete User Error: ", error.message);
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
 
 export const googleCallback = (req, res) => {
-  const user = req.user;
+    const user = req.user;
 
-  const token = generateToken(user._id);
+    const token = generateToken(user._id);
 
-  // Redirect to frontend with token or return JSON
-  return res.redirect(`http://localhost:3000/oauth-success?token=${token}`);
+    // Redirect to frontend with token or return JSON
+    return res.redirect(`http://localhost:3000/oauth-success?token=${token}`);
 };

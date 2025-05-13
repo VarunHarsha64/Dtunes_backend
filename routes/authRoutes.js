@@ -1,5 +1,5 @@
 import express from 'express';
-import { register, login, logout, googleCallback } from '../controllers/authController.js'
+import { register, login, logout, googleCallback, deleteUser, changePassword } from '../controllers/authController.js'
 import passport from 'passport';
 
 const router = express.Router();
@@ -7,6 +7,9 @@ const router = express.Router();
 router.post('/register', register); //body - name,email,password
 router.post('/login', login); //body - email,password
 router.post('/logout', logout); //body - none
+router.delete('/delete', deleteUser); //body - email, password
+router.patch('/changepassword', changePassword);  //body - email, oldpassword, newpassword
+
 
 router.get("/google", passport.authenticate("google", {
     scope: ["profile", "email"]
