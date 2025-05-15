@@ -5,6 +5,7 @@ import cors from 'cors';
 import connectDB from './config/db.js';
 import testRoutes from './routes/testRoutes.js'
 import authRoutes from './routes/authRoutes.js'
+import songRoutes from './routes/songRoutes.js'
 import passport from 'passport';
 import './config/passport.js'
 
@@ -17,6 +18,7 @@ app.use(express.json()); //automatically parses the json and makes it available 
 app.use(passport.initialize());
 
 // Routes
+app.use('/api/song', songRoutes)
 app.use('/api/test',testRoutes);
 app.use('/api/auth', authRoutes)
 
