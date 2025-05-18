@@ -17,6 +17,7 @@ const auth = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findById(decoded.id).select('-password'); // attach user to request
+    console.log(req.user);
     console.log('Auth Verfied!')
     next();
   } catch (err) {

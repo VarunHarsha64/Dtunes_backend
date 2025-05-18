@@ -9,9 +9,9 @@ router.post('/upload', auth ,upload.single('audio'), uploadSong);
 router.delete('/delete',auth,deleteSong);
 router.patch('/update', auth, updateSong);
 
-router.get('/', getAllSongs);
-router.get('/artist/:name', getSongsByArtist);
+router.get('/',auth ,getAllSongs);
+router.get('/artist/:name',auth ,getSongsByArtist);
 router.get('/me', auth, getMySongs);
-router.get('/:id', getSongById);
+router.get('/id/:id',auth ,getSongById);
 
 export default router;

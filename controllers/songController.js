@@ -34,6 +34,8 @@ export const getSongById = async (req, res) => {
 export const getSongsByArtist = async (req, res) => {
     try {
         const { name } = req.params;
+        console.log(name);
+        if(!name) return res.status(400).json({success:false, message:"Enter Artist name!"})
         const songs = await Song.find({ artist: { $regex: new RegExp(name, 'i') } }); // case-insensitive
         res.status(200).json({ success: true, data: songs });
     } catch (error) {

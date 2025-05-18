@@ -6,6 +6,8 @@ import connectDB from './config/db.js';
 import testRoutes from './routes/testRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import songRoutes from './routes/songRoutes.js'
+import playlistRoutes from './routes/playlistRoutes.js';
+import likeRoutes from './routes/likeRoutes.js'
 import passport from 'passport';
 import './config/passport.js'
 
@@ -21,6 +23,8 @@ app.use(passport.initialize());
 app.use('/api/song', songRoutes)
 app.use('/api/test',testRoutes);
 app.use('/api/auth', authRoutes)
+app.use('/api/playlist', playlistRoutes)
+app.use('/api/like', likeRoutes)
 
 // DB + Server
 connectDB();

@@ -1,4 +1,4 @@
-import Playlist from "../models/Playlist";
+import Playlist from "../models/Playlist.js";
 import { v4 as uuidv4 } from 'uuid';
 
 export const createPlaylist = async (req, res) => {
@@ -50,7 +50,8 @@ export const updatePlaylist = async (req, res) => {
         }
 
         // Check if the user is the creator
-        if (playlist.createdBy.toString() !== req.user._id.toString()) {
+        console.log(playlist)
+        if (playlist.creator.toString() !== req.user._id.toString()) {
             return res.status(403).json({ success: false, message: "Unauthorized" });
         }
 
@@ -58,15 +59,15 @@ export const updatePlaylist = async (req, res) => {
         const oldVisibility = playlist.visibility;
 
         if (oldVisibility === 'private') {
-            if (visibility === 'private' || visibility === 'grouped') {
+            if (visibility === 'private' || visibility === 'group') {
                 // do nothing
             } else if (visibility === 'public') {
                 playlist.sharedLink = null; // delete sharedLink
             }
-        } else if (oldVisibility === 'grouped') {
+        } else if (oldVisibility === 'group') {
             if (visibility === 'private') {
                 playlist.collaborators = []; // clear collaborators
-            } else if (visibility === 'grouped') {
+            } else if (visibility === 'group') {
                 // do nothing
             } else if (visibility === 'public') {
                 playlist.sharedLink = null; // remove sharedLink
@@ -75,7 +76,7 @@ export const updatePlaylist = async (req, res) => {
             if (visibility === 'private') {
                 playlist.collaborators = [];
                 playlist.sharedLink = uuidv4(); // generate new sharedLink
-            } else if (visibility === 'grouped') {
+            } else if (visibility === 'group') {
                 // keep collaborators if already present
                 if (!playlist.sharedLink) {
                     playlist.sharedLink = uuidv4(); // generate new sharedLink if missing
@@ -170,7 +171,7 @@ export const regenerateSharedLink = async (req, res) => {
             return res.status(404).json({ success: false, message: "Playlist not found" });
         }
 
-        if (playlist.createdBy.toString() !== userId.toString()) {
+        if (playlist.creator.toString() !== userId.toString()) {
             return res.status(403).json({ success: false, message: "Unauthorized" });
         }
 
@@ -343,7 +344,7 @@ export const removeCollaborator = async (req, res) => {
 
 export const getPublicPlaylists = async (req, res) => {
     try {
-        const playlists = await Playlist.find({ visibility: "public" }).populate('creator').populate('songs');
+        const playlists = await Playlist.find({ type: "public" })?.populate('creator')?.populate('songs');
 
         return res.status(200).json({ success: true, data: { playlists } });
     } catch (err) {

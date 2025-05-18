@@ -29,7 +29,7 @@ router.put('/rename', auth, renamePlaylist);
 // Fetch Playlists
 router.get('/user', auth, getUserPlaylists);
 router.get('/shared/:sharedLink', auth ,getPlaylistBySharedLink);
-router.get('/:playlistId', auth, getPlaylistById);
+router.get('/id/:playlistId', auth, getPlaylistById);
 router.get('/public',auth,getPublicPlaylists);
 
 // Playlist Deletion

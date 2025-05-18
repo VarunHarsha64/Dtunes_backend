@@ -12,6 +12,10 @@ const SongSchema = new mongoose.Schema({
   duration: {
     type: Number, // in seconds
   },
+  likes:{
+    type: Number,
+    default: 0,
+  },
   lyrics:{
     type: String,
     default: ''

@@ -11,8 +11,8 @@ const playlistSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['personal', 'private', 'group'],
-    default: 'personal',
+    enum: ['public', 'private', 'group'],
+    default: 'private',
   },
   creator: {
     type: mongoose.Schema.Types.ObjectId,
