@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
 import cors from 'cors';
+import http from 'http';
 import connectDB from './config/db.js';
 import testRoutes from './routes/testRoutes.js'
 import authRoutes from './routes/authRoutes.js'
@@ -11,8 +12,10 @@ import likeRoutes from './routes/likeRoutes.js'
 import friendRoutes from './routes/friendRoutes.js'
 import passport from 'passport';
 import './config/passport.js'
+import { setupSocket } from './sockets/socket.js';
 
 const app = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
 
 // Middleware
@@ -30,4 +33,6 @@ app.use('/api/friend', friendRoutes)
 
 // DB + Server
 connectDB();
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const io = setupSocket(server);
+console.log('Socket.IO server created'); 
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
