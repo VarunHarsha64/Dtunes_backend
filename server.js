@@ -8,6 +8,7 @@ import authRoutes from './routes/authRoutes.js'
 import songRoutes from './routes/songRoutes.js'
 import playlistRoutes from './routes/playlistRoutes.js';
 import likeRoutes from './routes/likeRoutes.js'
+import friendRoutes from './routes/friendRoutes.js'
 import passport from 'passport';
 import './config/passport.js'
 
@@ -25,6 +26,7 @@ app.use('/api/test',testRoutes);
 app.use('/api/auth', authRoutes)
 app.use('/api/playlist', playlistRoutes)
 app.use('/api/like', likeRoutes)
+app.use('/api/friend', friendRoutes)
 
 // DB + Server
 connectDB();
